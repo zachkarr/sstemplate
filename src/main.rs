@@ -13,7 +13,6 @@ fn get_home_dir() -> String {
 fn get_current_working_dir() -> std::io::Result<PathBuf> {
     env::current_dir()
 }
-
 enum Template {
     Client = 1,
     UserEvent,
