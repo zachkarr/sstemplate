@@ -5,27 +5,6 @@ use std::io::prelude::*;
 use std::io::{self};
 use std::path::PathBuf;
 
-fn main() {
-    println!("Which template would you like to use?");
-    println!("Enter number: Client(1), User Event(2), Suitelet(3), Restlet(4), Scheduled(5), Portlet(6), Map/Reduce(7) or Quit(0): ");
-
-    let templates = Templates::new();
-    let _template = match_templ(&templates);
-    if _template == "Goodbye!" {
-        return;
-    }
-    create_file(&_template);
-}
-
-fn get_home_dir() -> String {
-    let home_dir = env::var("HOME").unwrap();
-    home_dir
-}
-
-fn get_current_working_dir() -> std::io::Result<PathBuf> {
-    env::current_dir()
-}
-
 enum Template {
     Client = 1,
     UserEvent,
@@ -44,6 +23,18 @@ struct Templates {
     scheduled: String,
     portlet: String,
     map_reduce: String,
+}
+
+fn main() {
+    println!("Which template would you like to use?");
+    println!("Enter number: Client(1), User Event(2), Suitelet(3), Restlet(4), Scheduled(5), Portlet(6), Map/Reduce(7) or Quit(0): ");
+
+    let templates = Templates::new();
+    let _template = match_templ(&templates);
+    if _template == "Goodbye!" {
+        return;
+    }
+    create_file(&_template);
 }
 
 impl Templates {
@@ -69,32 +60,6 @@ impl Templates {
             Template::MapReduce => return &self.map_reduce,
         };
     }
-}
-
-fn create_file(_template: &str) {
-    println!("Enter a name for the new file (q to exit): ");
-
-    let f = std::io::stdin().lines().next().unwrap().unwrap();
-
-    if f == "q" {
-        println!("See you next time!");
-        return;
-    }
-
-    println!("Creating file: {}", f.trim());
-
-    let sys_path = get_home_dir() + "/.config/suite_script_templates/";
-    let mut _file = File::create(f.trim()).expect("Unable to create the file");
-    let file_contents = fs::read_to_string(format!("{sys_path}{_template}"))
-        .expect(&format!("{sys_path}{_template}"));
-    _file
-        .write_all(file_contents.as_bytes())
-        .expect("Unable to write contents to file");
-
-    println!(
-        "File created in {}",
-        get_current_working_dir().unwrap().display()
-    );
 }
 
 fn match_templ(templates: &Templates) -> String {
@@ -132,4 +97,39 @@ fn match_templ(templates: &Templates) -> String {
         }
     }
     return _template;
+}
+
+fn create_file(_template: &str) {
+    println!("Enter a name for the new file (q to exit): ");
+
+    let f = std::io::stdin().lines().next().unwrap().unwrap();
+
+    if f == "q" {
+        println!("See you next time!");
+        return;
+    }
+
+    println!("Creating file: {}", f.trim());
+
+    let sys_path = get_home_dir() + "/.config/suite_script_templates/";
+    let mut _file = File::create(f.trim()).expect("Unable to create the file");
+    let file_contents = fs::read_to_string(format!("{sys_path}{_template}"))
+        .expect(&format!("{sys_path}{_template}"));
+    _file
+        .write_all(file_contents.as_bytes())
+        .expect("Unable to write contents to file");
+
+    println!(
+        "File created in {}",
+        get_current_working_dir().unwrap().display()
+    );
+}
+
+fn get_home_dir() -> String {
+    let home_dir = env::var("HOME").unwrap();
+    home_dir
+}
+
+fn get_current_working_dir() -> std::io::Result<PathBuf> {
+    env::current_dir()
 }
