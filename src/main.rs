@@ -37,6 +37,18 @@ fn main() {
     create_file(&_template);
 }
 
+fn main() {
+    println!("Which template would you like to use?");
+    println!("Enter number: Client(1), User Event(2), Suitelet(3), Restlet(4), Scheduled(5), Portlet(6), Map/Reduce(7) or Quit(0): ");
+
+    let templates = Templates::new();
+    let _template = match_templ(&templates);
+    if _template == "Goodbye!" {
+        return;
+    }
+    create_file(&_template);
+}
+
 impl Templates {
     fn new() -> Templates {
         Templates {
@@ -63,6 +75,7 @@ impl Templates {
 }
 
 fn match_templ(templates: &Templates) -> String {
+fn match_templ(templates: &Templates) -> String {
     let mut _template = "".to_string();
     let stdin = io::stdin();
 
@@ -82,12 +95,18 @@ fn match_templ(templates: &Templates) -> String {
                         "To select a template, enter the associated number (1-7 or 0 to quit)"
                             .to_string()
                 }
+                _ => {
+                    _template =
+                        "To select a template, enter the associated number (1-7 or 0 to quit)"
+                            .to_string()
+                }
             };
 
             if choice <= 7 && choice > 0 {
                 break;
             } else if choice == 0 {
                 println!("{}", _template);
+                break;
                 break;
             } else {
                 println!("{}", _template);
